@@ -9,7 +9,6 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === '/';
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
@@ -48,19 +47,19 @@ export default function Header() {
     <header className="fixed top-0 w-full bg-dark/80 backdrop-blur-sm z-50">
       <nav className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-            <Link 
-                href="/" 
-                className="relative z-50 hover:opacity-90 transition-opacity"
-                >
-                <Image
-                    src="/images/aiyaninda_logo_white.svg"
-                    alt="AI Yanında Logo"
-                    width={140}
-                    height={40}
-                    className="h-8 md:h-10 w-auto"
-                    priority
-                />
-            </Link>
+          <Link 
+            href="/" 
+            className="relative z-50 hover:opacity-90 transition-opacity flex items-center"
+          >
+            <Image
+              src="/images/aiyaninda_logo_white1.svg"
+              alt="AI Yanında Logo"
+              width={600}
+              height={150}
+              className="h-16 w-auto"
+              priority
+            />
+          </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
