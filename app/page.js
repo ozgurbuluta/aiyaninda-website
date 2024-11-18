@@ -1,26 +1,37 @@
 // app/page.js
 'use client';
+
+import React, { useState } from 'react';
 import FeatureSection from './components/FeatureSection';
+import EmailCaptureModal from './components/EmailCaptureModal';
 
 export default function HomePage() {
+  const [email, setEmail] = useState('');
+  const [showModal, setShowModal] = useState(false);
+
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    setShowModal(true);
+  };
+
   const blogPosts = [
     {
       title: "Yapay Zeka ile Müşteri Deneyimini Nasıl İyileştirebilirsiniz?",
-      excerpt: "Modern işletmelerde yapay zeka kullanarak müşteri memnuniyetini artırmanın 5 etkili yolu...",
+      excerpt: "Modern işletmelerde yapay zeka kullanarak müşteri memnuniyetini artırmanın 5 etkili yolu ve sektör lideri şirketlerden başarı hikayeleri...",
       date: "15 Mart 2024",
       readTime: "5 dk",
       category: "Müşteri Deneyimi"
     },
     {
       title: "KOBİ'ler için Chatbot Çözümleri",
-      excerpt: "Küçük ve orta ölçekli işletmeler için uygun maliyetli chatbot çözümleri ve implementasyon stratejileri...",
+      excerpt: "Küçük ve orta ölçekli işletmeler için uygun maliyetli chatbot çözümleri ve implementasyon stratejileri. Başarılı KOBİ örnekleri...",
       date: "12 Mart 2024",
       readTime: "4 dk",
       category: "Teknoloji"
     },
     {
       title: "İşe Alım Süreçlerinde Yapay Zeka Kullanımı",
-      excerpt: "İK departmanlarının verimliliğini artıran yapay zeka destekli işe alım stratejileri ve başarı hikayeleri...",
+      excerpt: "İK departmanlarının verimliliğini artıran yapay zeka destekli işe alım stratejileri ve başarı hikayeleri. Örnek vaka analizleri...",
       date: "10 Mart 2024",
       readTime: "6 dk",
       category: "İK & İşe Alım"
@@ -48,18 +59,26 @@ export default function HomePage() {
               süreçlerinizi hızlandırın.
             </p>
 
-            <div className="flex flex-col md:flex-row justify-center items-stretch gap-4 max-w-2xl mx-auto">
-              <input
-                type="email"
-                placeholder="E-mail Adresinizi Girin"
-                className="w-full md:flex-1 p-4 rounded-xl bg-white/5 border border-white/10 
-                          text-light placeholder-gray-400 focus:outline-none focus:ring-2 
-                          focus:ring-primary/50 focus:border-transparent transition-all"
-              />
-               <button className="w-full md:w-auto px-8 py-2 bg-primary text-white font-medium 
-                    rounded-xl hover:bg-primary/70 transition-colors">
+            <div className="max-w-2xl mx-auto">
+              <form onSubmit={handleEmailSubmit} className="flex flex-col md:flex-row gap-4">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="E-mail Adresinizi Girin"
+                  required
+                  className="flex-1 p-4 rounded-xl bg-white/5 border border-white/10 
+                            text-light placeholder-gray-400 focus:outline-none focus:ring-2 
+                            focus:ring-primary/50"
+                />
+                <button 
+                  type="submit"
+                  className="md:w-auto px-8 py-4 bg-primary text-white font-medium 
+                           rounded-xl hover:bg-primary/90 transition-colors"
+                >
                   Şimdi Kaydol
                 </button>
+              </form>
             </div>
           </div>
 
@@ -140,6 +159,15 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Modal */}
+      {showModal && (
+        <EmailCaptureModal 
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          email={email}
+        />
+      )}
     </main>
   );
 }
