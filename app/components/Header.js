@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,12 +48,19 @@ export default function Header() {
     <header className="fixed top-0 w-full bg-dark/80 backdrop-blur-sm z-50">
       <nav className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-          <Link 
+            <Link 
                 href="/" 
-                className="text-2xl font-bold font-heading hover:text-primary transition-colors relative z-50"
-                        >
-                AI Yanında
-          </Link>
+                className="relative z-50 hover:opacity-90 transition-opacity"
+                >
+                <Image
+                    src="/images/aiyaninda_logo_white.svg"
+                    alt="AI Yanında Logo"
+                    width={140}
+                    height={40}
+                    className="h-8 md:h-10 w-auto"
+                    priority
+                />
+            </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
