@@ -52,7 +52,7 @@ export default function Header() {
             className="relative z-50 hover:opacity-90 transition-opacity flex items-center"
           >
             <Image
-              src="/images/aiyaninda_logo_white1.svg"
+              src="https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.0/public/images/aiyaninda_logo_white1.svg"
               alt="AI Yanında Logo"
               width={600}
               height={150}
