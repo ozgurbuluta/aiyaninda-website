@@ -47,7 +47,7 @@ export default function BlogPage() {
     return (
       <main className="min-h-screen bg-gradient-to-b from-dark to-gray-900 text-light">
         {/* Hero Section */}
-        <section className="relative pt-32 pb-24 px-6 bg-dark/90">
+        <section className="relative pt-64 pb-40 px-6 bg-dark/90">
           <div className="absolute inset-0 bg-primary/10 backdrop-blur-sm"></div>
           <div className="relative max-w-7xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6">

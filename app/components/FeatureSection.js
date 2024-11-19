@@ -1,6 +1,7 @@
 // app/components/FeatureSection.js
 'use client';
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 const FeatureSection = () => {
   const [activeTab, setActiveTab] = useState('pazarlama');
@@ -21,7 +22,8 @@ const FeatureSection = () => {
         "SEO uyumlu blog yazıları ve metinler",
         "Hedef kitle analizi ve segmentasyon",
         "Kampanya performans takibi"
-      ]
+      ],
+      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/MarketingImg.png"
     },
     satis: {
       title: "Satış Performansınızı Artırın",
@@ -31,7 +33,8 @@ const FeatureSection = () => {
         "Otomatik teklif hazırlama",
         "Satış tahminleme ve raporlama",
         "Müşteri iletişim optimizasyonu"
-      ]
+      ],
+      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/SalesImg.png"
     },
     finans: {
       title: "Finansal Süreçleri Kolaylaştırın",
@@ -41,7 +44,8 @@ const FeatureSection = () => {
         "Nakit akışı tahminleme",
         "Gider analizi ve optimizasyonu",
         "Finansal raporlama otomasyonu"
-      ]
+      ],
+      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/FinanceImg.png"
     },
     ik: {
       title: "İK Süreçlerinizi Hızlandırın",
@@ -51,7 +55,8 @@ const FeatureSection = () => {
         "Aday mülakat asistanı",
         "Çalışan performans analizi",
         "Eğitim ihtiyaç analizi"
-      ]
+      ],
+      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/HumanResourcesImg.jpg"
     }
   };
 
@@ -103,8 +108,14 @@ const FeatureSection = () => {
             </div>
           </div>
 
-          <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center">
-            <div className="w-3/4 h-3/4 bg-white/5 rounded-xl backdrop-blur-sm" />
+          <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5">
+            <Image 
+              src={features[activeTab].image} 
+              alt={features[activeTab].title} 
+              width={400} 
+              height={400} 
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>
