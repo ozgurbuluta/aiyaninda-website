@@ -1,3 +1,4 @@
+// app/components/ChatWrapper.js
 'use client';
 import dynamic from 'next/dynamic';
 
