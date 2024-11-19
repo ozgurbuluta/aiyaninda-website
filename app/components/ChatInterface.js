@@ -15,7 +15,7 @@ export default function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
-  
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -23,10 +23,6 @@ export default function ChatInterface() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,8 +49,6 @@ export default function ChatInterface() {
         })
       });
 
-      if (!response.ok) throw new Error('API request failed');
-
       const data = await response.json();
       
       if (data.error) {
@@ -66,7 +60,6 @@ export default function ChatInterface() {
         content: data.content
       }]);
     } catch (error) {
-      console.error('Chat error:', error);
       setError('Bir hata oluştu. Lütfen tekrar deneyin.');
     } finally {
       setIsLoading(false);
@@ -74,46 +67,48 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="fixed bottom-0 right-0 z-50 p-6">
-      {/* Chat Button */}
-      <button
-        onClick={toggleChat}
-        className={`p-7 bg-primary rounded-full shadow-lg hover:bg-primary/90 
-                   transition-all duration-300
-                   ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-        aria-label="Toggle chat"
-      >
-        <MessageSquare className="w-7 h-7 text-white" />
-      </button>
+    <>
+      {/* Chat Button - Made larger */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-8 right-8 p-5 bg-primary rounded-full shadow-lg 
+                     hover:bg-primary/90 transition-all duration-300 z-50
+                     hover:scale-105 active:scale-95"
+        >
+          <MessageSquare className="w-8 h-8 text-white" /> {/* Increased icon size */}
+        </button>
+      )}
 
       {/* Chat Window */}
       <div
         className={`fixed bottom-6 right-6 w-96 bg-dark border border-white/10 
-                    rounded-2xl shadow-2xl transition-all duration-300 transform
+                    rounded-2xl shadow-2xl z-50 transition-all duration-300
                     ${isOpen 
-                      ? 'scale-100 opacity-100 translate-y-0' 
-                      : 'scale-95 opacity-0 translate-y-4 pointer-events-none'}`}
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-4 pointer-events-none'}`}
       >
-        {/* Chat Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-primary" />
+        {/* Header */}
+        <div className="flex items-center justify-between p-5 border-b border-white/10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+              {/* Increased logo size */}
+              <MessageSquare className="w-7 h-7 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium text-white">AI Asistan</h3>
+              <h3 className="font-medium text-white text-lg">AI Asistan</h3>
               <p className="text-sm text-secondary">Her zaman yardıma hazır</p>
             </div>
           </div>
           <button 
-            onClick={toggleChat}
-            className="text-secondary hover:text-white transition-colors"
+            onClick={() => setIsOpen(false)}
+            className="text-secondary hover:text-white transition-colors p-2"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" /> {/* Slightly larger close button */}
           </button>
         </div>
 
-        {/* Chat Messages */}
+        {/* Messages */}
         <div className="h-96 overflow-y-auto p-4 space-y-4">
           {messages.map((message, index) => (
             <div
@@ -145,7 +140,7 @@ export default function ChatInterface() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Chat Input */}
+        {/* Input */}
         <form onSubmit={handleSubmit} className="p-4 border-t border-white/10">
           <div className="flex gap-2">
             <input
@@ -173,6 +168,6 @@ export default function ChatInterface() {
           </div>
         </form>
       </div>
-    </div>
+    </>
   );
 }

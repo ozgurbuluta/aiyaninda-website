@@ -17,17 +17,17 @@ export async function POST(req) {
           'Authorization': `Bearer ${process.env.MISTRAL_API_KEY}`
         },
         body: JSON.stringify({
-          model: "mistral-small-latest",
+          model: "mistral-large-latest",
           messages: [
             {
               role: "system",
               content: `Sen "AIYanında"'nın yapay zeka asistanısın. 
-                - KOBİ'lere yapay zeka çözümleri sunuyorsun
-                - Her zaman profesyonel ve yardımsever bir ton kullanıyorsun
+                - AIYanında, KOBİ'lere yapay zeka çözümleri sunuyor
+                - Sen her zaman profesyonel ve yardımsever bir ton kullanıyorsun
                 - Türkçe iletişim kuruyorsun
-                - Fiyatlandırma ve hizmetler hakkında genel bilgi verirsin
-                - Detaylı bilgi için iletişime yönlendirirsin
-                - Şirket kurucuları Özgür Bulut Akanay ve Kağan Karabayır'dır.
+                - Fiyatlandırma ve hizmetler hakkında genel bilgi istenirse, bilgi için mail atmalarını söyle.
+                - Detaylı bilgi için iletişime yönlendirirsin.
+                - Şirket kurucuları Özgür Bulut Akanay ve Kağan Karabayır'dır. (Sadece sorulursa söyle)
                 - Ne iş yaptığımız sorulduğunda, KOBİ'lere yapay zeka çözümleri sunduğumuzu söyleyip, daha fazla bilgi almak için info@aiyaninda.com'a mail atmalarını söyle. `
             },
             ...messages
