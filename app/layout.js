@@ -16,8 +16,6 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-
-
 const playfair = Playfair_Display({
   subsets: ['latin'],
   display: 'swap',
@@ -25,21 +23,28 @@ const playfair = Playfair_Display({
 });
 
 export default function RootLayout({ children }) {
-  const [showModal, setShowModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const [modalEmail, setModalEmail] = useState('');
 
   return (
     <html lang="tr" className={`scroll-smooth ${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen bg-dark">
-        <Header onSignUpClick={() => setShowModal(true)} />
+        <Header onSignUpClick={() => setShowContactModal(true)} />
         {children}
         <Footer />
         <ChatWrapper />
-        {showModal && (
+        {showEmailModal && (
           <EmailCaptureModal 
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
+            isOpen={showEmailModal}
+            onClose={() => setShowEmailModal(false)}
             email={modalEmail}
+          />
+        )}
+        {showContactModal && (
+          <ContactFormModal 
+            isOpen={showContactModal}
+            onClose={() => setShowContactModal(false)}
           />
         )}
       </body>
