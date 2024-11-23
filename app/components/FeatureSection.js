@@ -1,7 +1,8 @@
 // app/components/FeatureSection.js
 'use client';
 import React, { useState } from 'react';
-import Image from 'next/image';
+import { analytics } from '@/utils/firebase';
+import { logEvent } from 'firebase/analytics';
 
 const FeatureSection = () => {
   const [activeTab, setActiveTab] = useState('pazarlama');
@@ -10,7 +11,9 @@ const FeatureSection = () => {
     { id: 'pazarlama', label: 'Pazarlama' },
     { id: 'satis', label: 'Satış' },
     { id: 'finans', label: 'Finans' },
-    { id: 'ik', label: 'İnsan Kaynakları' }
+    { id: 'ik', label: 'İnsan Kaynakları' },
+    { id: 'operasyon', label: 'Operasyon' },
+    { id: 'musteri', label: 'Müşteri İlişkileri' }
   ];
   
   const features = {
@@ -21,9 +24,10 @@ const FeatureSection = () => {
         "Sosyal medya içerik üretimi ve planlaması",
         "SEO uyumlu blog yazıları ve metinler",
         "Hedef kitle analizi ve segmentasyon",
-        "Kampanya performans takibi"
-      ],
-      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/MarketingImg.png"
+        "Kampanya performans takibi",
+        "Email marketing otomasyonu",
+        "A/B test optimizasyonu"
+      ]
     },
     satis: {
       title: "Satış Performansınızı Artırın",
@@ -32,9 +36,10 @@ const FeatureSection = () => {
         "Potansiyel müşteri skorlaması",
         "Otomatik teklif hazırlama",
         "Satış tahminleme ve raporlama",
-        "Müşteri iletişim optimizasyonu"
-      ],
-      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/SalesImg.png"
+        "Müşteri iletişim optimizasyonu",
+        "Satış fırsatı analizi",
+        "Müşteri yolculuğu takibi"
+      ]
     },
     finans: {
       title: "Finansal Süreçleri Kolaylaştırın",
@@ -43,9 +48,10 @@ const FeatureSection = () => {
         "Otomatik fatura işleme ve kategorizasyon",
         "Nakit akışı tahminleme",
         "Gider analizi ve optimizasyonu",
-        "Finansal raporlama otomasyonu"
-      ],
-      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/FinanceImg.png"
+        "Finansal raporlama otomasyonu",
+        "Risk analizi ve yönetimi",
+        "Bütçe planlama ve takibi"
+      ]
     },
     ik: {
       title: "İK Süreçlerinizi Hızlandırın",
@@ -54,18 +60,59 @@ const FeatureSection = () => {
         "Özgeçmiş tarama ve değerlendirme",
         "Aday mülakat asistanı",
         "Çalışan performans analizi",
-        "Eğitim ihtiyaç analizi"
-      ],
-      image: "https://cdn.jsdelivr.net/gh/ozgurbuluta/aiyaninda-website@v1.0.2/public/images/HumanResourcesImg.jpg"
+        "Eğitim ihtiyaç analizi",
+        "İşe alım süreci otomasyonu",
+        "Çalışan memnuniyeti takibi"
+      ]
+    },
+    operasyon: {
+      title: "Operasyonel Süreçleri Optimize Edin",
+      description: "Tedarik zincirinden stok yönetimine kadar operasyonel süreçlerinizi yapay zeka ile geliştirin.",
+      details: [
+        "Stok optimizasyonu",
+        "Tedarik zinciri yönetimi",
+        "Kalite kontrol otomasyonu",
+        "Üretim planlama",
+        "Lojistik optimizasyonu",
+        "Bakım planlama ve takibi"
+      ]
+    },
+    musteri: {
+      title: "Müşteri İlişkilerini Güçlendirin",
+      description: "Müşteri hizmetlerinden sadakat programlarına kadar müşteri ilişkilerinizi yapay zeka ile geliştirin.",
+      details: [
+        "7/24 chatbot desteği",
+        "Müşteri talep analizi",
+        "Sadakat programı yönetimi",
+        "Müşteri segmentasyonu",
+        "Otomatik ticket yönetimi",
+        "Müşteri geri bildirim analizi"
+      ]
     }
   };
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
+    
+    // Log feature interest
+    if (analytics) {
+      logEvent(analytics, 'feature_view', {
+        feature_name: tabId,
+        previous_tab: activeTab
+      });
+    }
+  };
+
+  const handleLearnMoreClick = () => {
+    if (analytics) {
+      logEvent(analytics, 'learn_more_click', {
+        feature: activeTab
+      });
+    }
   };
 
   return (
-    <section id="ozellikler" className="py-24 px-6 bg-dark/50 scroll-mt24">
+    <section id="ozellikler" className="py-24 px-6 bg-dark/50 scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-heading font-bold text-center mb-16">
           Keşfedin: AI sizin için neler yapabilir?
@@ -102,20 +149,19 @@ const FeatureSection = () => {
               ))}
             </ul>
             <div className="pt-6">
-              <button className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors">
+              <button 
+                onClick={handleLearnMoreClick}
+                className="bg-primary text-white px-8 py-3 rounded-lg 
+                         hover:bg-primary/90 transition-colors"
+              >
                 Daha Fazla Bilgi
               </button>
             </div>
           </div>
 
-          <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5">
-            <Image 
-              src={features[activeTab].image} 
-              alt={features[activeTab].title} 
-              width={400} 
-              height={400} 
-              className="w-full h-full object-cover"
-            />
+          <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 
+                         rounded-2xl flex items-center justify-center">
+            <div className="w-3/4 h-3/4 bg-white/5 rounded-xl backdrop-blur-sm" />
           </div>
         </div>
       </div>

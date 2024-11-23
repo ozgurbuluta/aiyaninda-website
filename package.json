@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@firebase/analytics": "^0.10.10",
     "@firebase/app": "^0.10.16",
     "@firebase/firestore": "^4.7.5",
     "@mistralai/mistralai": "^1.3.4",
+    "@vercel/analytics": "^1.4.1",
     "firebase": "^11.0.2",
     "lucide-react": "^0.460.0",
     "next": "14.0.4",

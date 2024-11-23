@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/components/*": ["./app/components/*"],
+      "@/utils/*": ["./app/utils/*"]
     },
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],

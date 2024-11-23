@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import FeatureSection from './components/FeatureSection';
+import FeatureProgress from './components/FeatureProgress';
 import EmailCaptureModal from './components/EmailCaptureModal';
 
 export default function HomePage() {
@@ -82,15 +83,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Added decorative elements */}
           <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
             <div className="w-0.5 h-32 bg-gradient-to-b from-primary/20 to-transparent" />
           </div>
         </div>
       </section>
 
-      {/* Feature Section */}
+      {/* Feature Sections */}
       <FeatureSection />
+      <FeatureProgress />
 
       {/* Blog Section */}
       <section className="py-20 px-6">

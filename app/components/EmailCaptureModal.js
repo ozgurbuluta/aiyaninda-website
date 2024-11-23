@@ -1,31 +1,44 @@
+// app/components/EmailCaptureModal.js
 'use client';
 
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import dynamic from 'next/dynamic';
+import { analytics } from '@/utils/firebase';
+import { logEvent } from 'firebase/analytics';
+import { db } from '@/utils/firebase';
 
-const EmailCaptureModalContent = ({ isOpen, onClose, email }) => {
-  const { db } = require('../firebase');
+const EmailCaptureModal = ({ isOpen, onClose, email }) => {
   const [consent, setConsent] = useState({
     newsletter: false,
     kvkk: false
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [status, setStatus] = useState('idle');
 
-  if (!isOpen) return null;
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submit started with email:', email);
-    
-    if (!consent.kvkk) {
-      alert('KVKK aydınlatma metnini kabul etmeniz gerekmektedir.');
+    setError(null);
+    setLoading(true);
+
+    if (!validateEmail(email)) {
+      setError('Lütfen geçerli bir email adresi giriniz.');
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
+    // Log attempt
+    if (analytics) {
+      logEvent(analytics, 'signup_attempt', {
+        source: 'hero_section'
+      });
+    }
 
     try {
       const docRef = await addDoc(collection(db, "subscribers"), {
@@ -36,20 +49,33 @@ const EmailCaptureModalContent = ({ isOpen, onClose, email }) => {
         source: 'hero_section'
       });
 
-      console.log('Document written with ID:', docRef.id);
+      // Log success
+      if (analytics) {
+        logEvent(analytics, 'signup_success', {
+          source: 'hero_section',
+          newsletter_opted: consent.newsletter
+        });
+      }
+
       setStatus('success');
-      
-      // Close after success
       setTimeout(() => {
         onClose();
       }, 2000);
     } catch (error) {
-      console.error('Error adding document:', error);
-      setStatus('error');
+      console.error('Error:', error);
+      // Log error
+      if (analytics) {
+        logEvent(analytics, 'signup_error', {
+          error_message: error.message
+        });
+      }
+      setError('Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
     } finally {
       setLoading(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -79,12 +105,18 @@ const EmailCaptureModalContent = ({ isOpen, onClose, email }) => {
                 <input
                   type="checkbox"
                   checked={consent.newsletter}
-                  onChange={(e) => setConsent(prev => ({
-                    ...prev,
-                    newsletter: e.target.checked
-                  }))}
-                  className="mt-1 text-primary rounded border-gray-600 
-                           focus:ring-primary focus:ring-offset-dark"
+                  onChange={(e) => {
+                    setConsent(prev => ({
+                      ...prev,
+                      newsletter: e.target.checked
+                    }));
+                    if (analytics) {
+                      logEvent(analytics, 'newsletter_consent_change', {
+                        consented: e.target.checked
+                      });
+                    }
+                  }}
+                  className="mt-1 text-primary rounded border-gray-600 focus:ring-primary focus:ring-offset-dark"
                 />
                 <span className="text-sm text-gray-300 group-hover:text-white">
                   AI Yanında'dan güncel yapay zeka haberleri ve özel teklifler almak istiyorum.
@@ -95,12 +127,18 @@ const EmailCaptureModalContent = ({ isOpen, onClose, email }) => {
                 <input
                   type="checkbox"
                   checked={consent.kvkk}
-                  onChange={(e) => setConsent(prev => ({
-                    ...prev,
-                    kvkk: e.target.checked
-                  }))}
-                  className="mt-1 text-primary rounded border-gray-600 
-                           focus:ring-primary focus:ring-offset-dark"
+                  onChange={(e) => {
+                    setConsent(prev => ({
+                      ...prev,
+                      kvkk: e.target.checked
+                    }));
+                    if (analytics) {
+                      logEvent(analytics, 'kvkk_consent_change', {
+                        consented: e.target.checked
+                      });
+                    }
+                  }}
+                  className="mt-1 text-primary rounded border-gray-600 focus:ring-primary focus:ring-offset-dark"
                 />
                 <span className="text-sm text-gray-300 group-hover:text-white">
                   KVKK Aydınlatma Metni'ni okudum ve kabul ediyorum.
@@ -108,30 +146,24 @@ const EmailCaptureModalContent = ({ isOpen, onClose, email }) => {
               </label>
             </div>
 
+            {error && (
+              <div className="text-red-500 text-sm p-2 bg-red-500/10 rounded">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading || !consent.kvkk}
-              className="w-full bg-primary text-white px-6 py-3 rounded-lg
-                       hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {loading ? 'Gönderiliyor...' : 'Onayla'}
             </button>
-
-            {status === 'error' && (
-              <p className="text-red-500 text-sm text-center">
-                Bir hata oluştu. Lütfen tekrar deneyin.
-              </p>
-            )}
           </form>
         )}
       </div>
     </div>
   );
 };
-
-const EmailCaptureModal = dynamic(() => Promise.resolve(EmailCaptureModalContent), {
-    ssr: false
-  });
-  
 
 export default EmailCaptureModal;

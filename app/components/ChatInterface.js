@@ -1,7 +1,8 @@
-// app/components/ChatInterface.js
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader } from 'lucide-react';
+import { analytics } from '@/utils/firebase';
+import { logEvent } from 'firebase/analytics';
 
 export default function ChatInterface() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,12 @@ export default function ChatInterface() {
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
 
+  useEffect(() => {
+    if (isOpen && analytics) {
+      logEvent(analytics, 'chat_opened');
+    }
+  }, [isOpen]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -29,6 +36,13 @@ export default function ChatInterface() {
     if (!inputMessage.trim()) return;
     setIsLoading(true);
     setError(null);
+
+    // Log chat message attempt
+    if (analytics) {
+      logEvent(analytics, 'chat_message_sent', {
+        message_length: inputMessage.length
+      });
+    }
 
     const userMessage = {
       role: 'user',
@@ -55,11 +69,24 @@ export default function ChatInterface() {
         throw new Error(data.error);
       }
 
+      // Log successful response
+      if (analytics) {
+        logEvent(analytics, 'chat_response_received', {
+          success: true
+        });
+      }
+
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: data.content
       }]);
     } catch (error) {
+      // Log error
+      if (analytics) {
+        logEvent(analytics, 'chat_error', {
+          error_message: error.message
+        });
+      }
       setError('Bir hata oluştu. Lütfen tekrar deneyin.');
     } finally {
       setIsLoading(false);

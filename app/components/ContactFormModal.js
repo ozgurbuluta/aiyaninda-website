@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { X, Loader } from 'lucide-react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../utils/firebase';
 
 export default function ContactFormModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
