@@ -47,6 +47,7 @@ export default function RootLayout({ children }) {
             onClose={() => setShowContactModal(false)}
           />
         )}
+        <SpeedInsights />
       </body>
     </html>
   );
